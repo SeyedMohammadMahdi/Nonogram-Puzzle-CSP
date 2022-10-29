@@ -60,24 +60,7 @@ public class Nonogram {
     } 
 
     private int[] MRV (State state) {
-        ArrayList<ArrayList<String>> cBoard = state.getBoard();
-        ArrayList<ArrayList<ArrayList<String>>> cDomain = state.getDomain();
-
-        int min = Integer.MAX_VALUE;
         int[] result = new int[2];
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (cBoard.get(i).get(j).equals("E")) {
-                    int val = cDomain.get(i).get(j).size();
-                    if (val < min) {
-                        min = val;
-                        result[0] = i;
-                        result[1] = j;
-                    }
-                }
-            }
-        }
         return result;
     }
 
