@@ -21,11 +21,65 @@ public class Nonogram {
 
     public void start() {
         long tStart = System.nanoTime();
-        // backtrack(state);
+        backtrack(state);
         long tEnd = System.nanoTime();
         System.out.println("Total time: " + (tEnd - tStart)/1000000000.000000000);
     }
 
+    private boolean backtrack(State state) {
+
+        if (isFinished(state)) {
+
+            System.out.println("Result Board: \n");
+            state.printBoard();
+            return true;
+        }
+        if (allAssigned(state)) {
+            return false;
+        }
+
+        int[] mrvRes = MRV(state);
+        for (String s : LCV(state, mrvRes)) {
+            State newState = state.copy();
+            newState.setIndexBoard(mrvRes[0], mrvRes[1], s);
+            newState.removeIndexDomain(mrvRes[0], mrvRes[1], s);
+            if (!isConsistent(newState)) {
+                continue;
+            }
+
+            if (backtrack(newState)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private ArrayList<String> LCV (State state, int[] var) {
+        return state.getDomain().get(var[0]).get(var[1]);
+    } 
+
+    private int[] MRV (State state) {
+        ArrayList<ArrayList<String>> cBoard = state.getBoard();
+        ArrayList<ArrayList<ArrayList<String>>> cDomain = state.getDomain();
+
+        int min = Integer.MAX_VALUE;
+        int[] result = new int[2];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (cBoard.get(i).get(j).equals("E")) {
+                    int val = cDomain.get(i).get(j).size();
+                    if (val < min) {
+                        min = val;
+                        result[0] = i;
+                        result[1] = j;
+                    }
+                }
+            }
+        }
+        return result;
+    }
 
     private boolean allAssigned(State state) {
         ArrayList<ArrayList<String>> cBoard = state.getBoard();

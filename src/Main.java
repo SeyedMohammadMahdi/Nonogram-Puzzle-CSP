@@ -13,7 +13,7 @@ public class Main {
     private static ArrayList<ArrayList<ArrayList<String>>> domain;
 
     public static void main(String[] args) {
-        File file = new File("/media/arya/hdd6t/artificial-intelligence/csp/nonogram/inputs/input3.txt");
+        File file = new File("/home/arya/Desktop/Nonogram-Puzzle-CSP/inputs/input3.txt");
         Scanner scanner;
 
         try {
