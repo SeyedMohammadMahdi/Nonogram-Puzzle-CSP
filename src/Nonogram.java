@@ -39,6 +39,7 @@ public class Nonogram {
         }
 
         int[] mrvRes = MRV(state);
+        update(mrvRes, state);
         for (String s : LCV(state, mrvRes)) {
             State newState = state.copy();
             newState.setIndexBoard(mrvRes[0], mrvRes[1], s);
@@ -53,6 +54,51 @@ public class Nonogram {
         }
 
         return false;
+    }
+
+    public void update(int[] status, State state){
+        ArrayList<Integer> i_constraint = this.row_constraints.get(status[0]);
+        ArrayList<Integer> j_constraint = this.col_constraints.get(status[1]);
+        boolean s = true;
+        int count = 0;
+        for (int k : i_constraint) {
+
+
+
+            for(int j=0;j<state.getN();j++){
+                if(state.getBoard().get(status[0]).get(j) == "F")
+                    count++;
+
+            }
+        }
+        if(count == i_constraint.get(0)){
+            for(int j=0;j<state.getN();j++){
+                if(state.getBoard().get(status[0]).get(j) == "E"){
+                    state.setIndexBoard(status[0], j, "X");
+                    // System.out.println(true);
+                }
+            }
+        }
+
+
+        if (j_constraint.size() == 1){
+            int counter  =0;
+
+            for(int i=0;i<state.getN();i++){
+                if(state.getBoard().get(status[0]).get(i) == "F")
+                    counter++;
+
+            }
+            if(counter == j_constraint.get(0)){
+                for(int i=0;i<state.getN();i++){
+                    if(state.getBoard().get(status[0]).get(i) == "E"){
+                        state.setIndexBoard(status[0], i, "X");
+                        // System.out.println(true);
+                    }
+                }
+            }
+        }
+
     }
 
     private ArrayList<String> LCV (State state, int[] var) {
