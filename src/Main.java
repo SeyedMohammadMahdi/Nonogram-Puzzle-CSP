@@ -6,14 +6,14 @@ import java.util.Scanner;
 
 public class Main {
     private static int n;
-    private static ArrayList<ArrayList<Integer>> row_constraints;
-    private static ArrayList<ArrayList<Integer>> col_constraints;
+    public static ArrayList<ArrayList<Integer>> row_constraints;
+    public static ArrayList<ArrayList<Integer>> col_constraints;
 
     private static ArrayList<ArrayList<String>> board;
     private static ArrayList<ArrayList<ArrayList<String>>> domain;
 
     public static void main(String[] args) {
-        File file = new File("/media/arya/hdd6t/artificial-intelligence/csp/nonogram/inputs/input5.txt");
+        File file = new File("/home/mmnb/Desktop/nono gram/inputs/input5.txt");
         Scanner scanner;
 
         try {

@@ -53,48 +53,56 @@ public class Nonogram {
             }
         }
 
+
         return false;
     }
 
     public void update(int[] status, State state){
-        ArrayList<Integer> i_constraint = this.row_constraints.get(status[0]);
-        ArrayList<Integer> j_constraint = this.col_constraints.get(status[1]);
+        ArrayList<Integer> i_constraint = Main.row_constraints.get(status[0]);
+        ArrayList<Integer> j_constraint = Main.col_constraints.get(status[1]);
+
         boolean s = true;
-        int count = 0;
+        int count;
         for (int k : i_constraint) {
-
-
-
+            count = 0;
             for(int j=0;j<state.getN();j++){
                 if(state.getBoard().get(status[0]).get(j) == "F")
                     count++;
 
             }
+            if(count != k) {
+                s = false;
+                break;
+            }
+
         }
-        if(count == i_constraint.get(0)){
+        if(s){
             for(int j=0;j<state.getN();j++){
                 if(state.getBoard().get(status[0]).get(j) == "E"){
                     state.setIndexBoard(status[0], j, "X");
-                    // System.out.println(true);
                 }
             }
         }
 
-
-        if (j_constraint.size() == 1){
-            int counter  =0;
-
+        s = true;
+        for(int k : j_constraint){
+            count = 0;
             for(int i=0;i<state.getN();i++){
-                if(state.getBoard().get(status[0]).get(i) == "F")
-                    counter++;
+                if(state.getBoard().get(i).get(status[1]) == "F")
+                    count++;
 
             }
-            if(counter == j_constraint.get(0)){
-                for(int i=0;i<state.getN();i++){
-                    if(state.getBoard().get(status[0]).get(i) == "E"){
-                        state.setIndexBoard(status[0], i, "X");
-                        // System.out.println(true);
-                    }
+            if(count != k) {
+                s = false;
+                break;
+            }
+        }
+
+        if(s){
+            for(int i=0;i<state.getN();i++){
+                if(state.getBoard().get(i).get(status[1]) == "E"){
+                    state.setIndexBoard(i, status[1], "X");
+
                 }
             }
         }
