@@ -58,18 +58,31 @@ public class Nonogram {
     }
 
     public void update(int[] status, State state){
+
+        if(state.getDomain().get(status[0]).get(status[1]).size()<2){
+            System.out.println("ok");
+            return;
+        }
+
         ArrayList<Integer> i_constraint = Main.row_constraints.get(status[0]);
         ArrayList<Integer> j_constraint = Main.col_constraints.get(status[1]);
 
         boolean s = true;
         int count;
+        int index = 0;
+
         for (int k : i_constraint) {
             count = 0;
-            for(int j=0;j<state.getN();j++){
+            int j;
+            for(j = index;j<state.getN(); j++){
+                if(count>0 && state.getBoard().get(status[0]).get(j) == "X"){
+//                    index = j ;
+                    break;
+                }
                 if(state.getBoard().get(status[0]).get(j) == "F")
                     count++;
-
             }
+            index = j;
             if(count != k) {
                 s = false;
                 break;
@@ -85,14 +98,20 @@ public class Nonogram {
             }
         }
 
+        index = 0;
         s = true;
         for(int k : j_constraint){
             count = 0;
-            for(int i=0;i<state.getN();i++){
+            int i;
+            for(i=index;i<state.getN();i++){
+                if (count > 0 && state.getBoard().get(i).get(status[1]) == "X") {
+                    break;
+                }
                 if(state.getBoard().get(i).get(status[1]) == "F")
                     count++;
 
             }
+            index = i;
             if(count != k) {
                 s = false;
                 break;
