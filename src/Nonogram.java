@@ -130,7 +130,87 @@ public class Nonogram {
     }
 
     private ArrayList<String> LCV (State state, int[] var) {
-        return state.getDomain().get(var[0]).get(var[1]);
+        if(state.getDomain().get(var[0]).get(var[1]).size()<2) {
+            return state.getDomain().get(var[0]).get(var[1]);
+        }
+
+        int row = 0;
+        for(int k : this.row_constraints.get(var[0])) {
+            row += k;
+        }
+        int col = 0;
+        for(int k : this.col_constraints.get(var[1])){
+            col += k;
+        }
+
+        int count = 0;
+        boolean FisOk = false;
+        for (int i = 0; i < state.getN(); i++) {
+            if(state.getBoard().get(var[0]).get(i) == "F")
+                count++;
+        }
+        if (count < row) {
+            FisOk = true;
+        }
+        count = 0;
+        for (int i = 0; i < state.getN(); i++) {
+            if(state.getBoard().get(i).get(var[1]) == "F")
+                count++;
+        }
+
+        if (count < col) {
+            FisOk = (FisOk && true);
+        }
+
+
+        if(!FisOk) {
+            ArrayList<String> res = new ArrayList<>();
+            res.add("X");
+            return res;
+        }
+
+
+        double sum = 0;
+        for (int k : this.row_constraints.get(var[0])) {
+            sum += k;
+        }
+
+
+        for (int k : this.col_constraints.get(var[1])) {
+            sum += k;
+        }
+
+        double F = 0;
+        double E = 0;
+        for (int i = 0; i < state.getN(); i++) {
+            if(state.getBoard().get(i).get(var[1]) == "E") {
+                E++;
+            } else if (state.getBoard().get(i).get(var[1]) == "F") {
+                F++;
+            }
+        }
+
+        for (int i = 0; i < state.getN(); i++) {
+            if(state.getBoard().get(var[0]).get(i) == "E") {
+                E++;
+            } else if (state.getBoard().get(var[0]).get(i) == "F") {
+                F++;
+            }
+        }
+
+        double size = state.getN() * 2 - 1;
+        double probability = (sum - F)/ E;
+//        System.out.println(probability);
+        ArrayList<String> res = new ArrayList<>();
+        if (probability > 0.3) {
+            res.add("F");
+            res.add("X");
+        }else {
+            res.add("X");
+            res.add("F");
+        }
+        return res;
+
     } 
 
     private int[] MRV (State state) {
