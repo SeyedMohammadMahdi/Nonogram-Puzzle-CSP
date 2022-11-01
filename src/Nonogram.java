@@ -78,8 +78,9 @@ public class Nonogram {
         }
         if(s){
             for(int j=0;j<state.getN();j++){
-                if(state.getBoard().get(status[0]).get(j) == "E"){
+                if(state.getBoard().get(status[0]).get(j).equals("E")){
                     state.setIndexBoard(status[0], j, "X");
+                    state.removeIndexDomain(status[0], j, "F");
                 }
             }
         }
@@ -102,7 +103,7 @@ public class Nonogram {
             for(int i=0;i<state.getN();i++){
                 if(state.getBoard().get(i).get(status[1]) == "E"){
                     state.setIndexBoard(i, status[1], "X");
-
+                    state.removeIndexDomain(i, status[1], "F");
                 }
             }
         }
