@@ -39,12 +39,16 @@ public class Nonogram {
         }
 
         int[] mrvRes = MRV(state);
-        update(mrvRes, state);
+        ForwardChecking(mrvRes, state);
+        ac3(mrvRes,state);
         for (String s : LCV(state, mrvRes)) {
             State newState = state.copy();
+
             newState.setIndexBoard(mrvRes[0], mrvRes[1], s);
             newState.removeIndexDomain(mrvRes[0], mrvRes[1], s);
+
             if (!isConsistent(newState)) {
+                newState.removeIndexDomain(mrvRes[0], mrvRes[1], s);
                 continue;
             }
 
@@ -57,7 +61,7 @@ public class Nonogram {
         return false;
     }
 
-    public void update(int[] status, State state){
+    public void ForwardChecking(int[] status, State state){
 
         if(state.getDomain().get(status[0]).get(status[1]).size()<2){
             System.out.println("ok");
@@ -129,6 +133,116 @@ public class Nonogram {
 
     }
 
+    private void ac3(int[] status , State state) {
+        if (this.row_constraints.get(status[0]).size() == 1) {
+            if ((this.row_constraints.get(status[0]).get(0) * 2) > state.getN()) {
+                for (int i = state.getN() - this.row_constraints.get(status[0]).get(0); i < this.row_constraints.get(status[0]).get(0); i++) {
+                    state.removeIndexDomain(status[0], i, "X");
+                    state.setIndexBoard(status[0], i, "F");
+                }
+            }
+        }
+        if (this.col_constraints.get(status[1]).size() == 1) {
+            if ((this.col_constraints.get(status[1]).get(0) * 2) > state.getN()) {
+                for (int i = state.getN() - this.col_constraints.get(status[1]).get(0); i < this.col_constraints.get(status[1]).get(0); i++) {
+                    state.removeIndexDomain(i, status[1], "X");
+                    state.setIndexBoard(i, status[1], "F");
+                }
+            }
+        }
+        {
+            int F = this.row_constraints.get(status[0]).get(0);
+            int cnt = 0, max_block = 0;
+            boolean F_come = false;
+            for (int i = 0; i < status[1]; i++) {
+                String a = state.getBoard().get(status[0]).get(i);
+                if (a == "F") {
+                    cnt++;
+                    F_come = true;
+                }
+                if (a == "E") {
+                    cnt++;
+                }
+                if (a == "X") {
+                    cnt = 0;
+                }
+                if (max_block < cnt) max_block = cnt;
+            }
+            if (F_come == true && max_block < F) {
+                state.removeIndexDomain(status[0], status[1], "X");
+                state.setIndexBoard(status[0], status[1], "F");
+            }
+        }
+        {
+            int F = this.col_constraints.get(status[1]).get(0);
+            int cnt = 0, max_block = 0;
+            boolean F_come = false;
+            for (int i = 0; i < status[0]; i++) {
+                String a = state.getBoard().get(i).get(status[1]);
+                if (a == "F") {
+                    cnt++;
+                    F_come = true;
+                }
+                if (a == "E") {
+                    cnt++;
+                }
+                if (a == "X") {
+                    cnt = 0;
+                }
+                if (max_block < cnt) max_block = cnt;
+            }
+            if (F_come == true && max_block < F) {
+                state.removeIndexDomain(status[0], status[1], "X");
+                state.setIndexBoard(status[0], status[1], "F");
+            }
+        }
+        {
+            int F = this.row_constraints.get(status[0]).get(this.row_constraints.get(status[0]).size()-1);
+            int cnt = 0, max_block = 0;
+            boolean F_come = false;
+            for (int i = state.getN()-1; i > status[1]; i--) {
+                String a = state.getBoard().get(status[0]).get(i);
+                if (a == "F") {
+                    cnt++;
+                    F_come = true;
+                }
+                if (a == "E") {
+                    cnt++;
+                }
+                if (a == "X") {
+                    cnt = 0;
+                }
+                if (max_block < cnt) max_block = cnt;
+            }
+            if (F_come == true && max_block < F) {
+                state.removeIndexDomain(status[0], status[1], "X");
+                state.setIndexBoard(status[0], status[1], "F");
+            }
+        }
+        {
+            int F = this.col_constraints.get(status[1]).get(this.col_constraints.get(status[1]).size()-1);
+            int cnt = 0, max_block = 0;
+            boolean F_come = false;
+            for (int i = state.getN()-1; i > status[0]; i--) {
+                String a = state.getBoard().get(i).get(status[1]);
+                if (a == "F") {
+                    cnt++;
+                    F_come = true;
+                }
+                if (a == "E") {
+                    cnt++;
+                }
+                if (a == "X") {
+                    cnt = 0;
+                }
+                if (max_block < cnt) max_block = cnt;
+            }
+            if (F_come == true && max_block < F) {
+                state.removeIndexDomain(status[0], status[1], "X");
+                state.setIndexBoard(status[0], status[1], "F");
+            }
+        }
+    }
     private ArrayList<String> LCV (State state, int[] var) {
         if(state.getDomain().get(var[0]).get(var[1]).size()<2) {
             return state.getDomain().get(var[0]).get(var[1]);
